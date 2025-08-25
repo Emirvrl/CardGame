@@ -7,8 +7,17 @@
 </head>
 <body>
     <h1>Kart Oyunu</h1>
-    <div id="game-board"></div>
-    <button id="start-btn">Oyunu Başlat</button>
+    <div id="main-menu" class="menu-box">
+        <input type="text" id="nickname" placeholder="Kullanıcı Adı" class="input-green"/>
+        <input type="file" id="avatar" accept="image/*" class="input-green"/>
+        <div id="avatar-preview" class="avatar-preview"></div>
+        <div class="lobby-buttons">
+            <button id="create-lobby" class="btn-orange">Lobi Oluştur</button>
+            <button id="join-lobby" class="btn-green">Lobiye Katıl</button>
+        </div>
+    </div>
+    <div id="game-board" style="display:none;"></div>
+    <button id="start-btn" style="display:none;">Oyunu Başlat</button>
     <script src="script.js"></script>
 </body>
 </html>
