@@ -1,32 +1,45 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <title>Kart Oyunu</title>
     <link rel="stylesheet" href="style.css">
     <!-- Kart görselleri için stil -->
     <style>
-    .card-img {
-        width: 70px;
-        height: 100px;
-        object-fit: contain;
-        border-radius: 6px;
-    }
+        .card-img {
+            width: 70px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
     </style>
 </head>
+
 <body>
     <h1>Kart Oyunu</h1>
     <div id="main-menu" class="menu-box">
-        <input type="text" id="nickname" placeholder="Kullanıcı Adı" class="input-green"/>
+        <input type="text" id="nickname" placeholder="Kullanıcı Adı" class="input-green" />
         <div style="position: relative;">
             <div id="avatar-preview" class="avatar-preview" title="Avatarı değiştir"></div>
             <div id="avatar-panel" class="avatar-panel">
                 <div class="avatar-panel-header">Avatar Seç</div>
                 <div id="avatar-list">
-                    <img src="images/p1.jpg" class="avatar-option" data-avatar="images/p1.jpg" />
-                    <img src="images/p2.jpg" class="avatar-option" data-avatar="images/p2.jpg" />
-                    <img src="images/p3.jpg" class="avatar-option" data-avatar="images/p3.jpg" />
-                    <img src="images/p4.jpg" class="avatar-option" data-avatar="images/p4.jpg" />
+                    <img src="images/avatar_01.png" class="avatar-option" data-avatar="images/avatar_01.png" />
+                    <img src="images/avatar_02.png" class="avatar-option" data-avatar="images/avatar_02.png" />
+                    <img src="images/avatar_03.png" class="avatar-option" data-avatar="images/avatar_03.png" />
+                    <img src="images/avatar_04.png" class="avatar-option" data-avatar="images/avatar_04.png" />
+                    <img src="images/avatar_05.png" class="avatar-option" data-avatar="images/avatar_05.png" />
+                    <img src="images/avatar_06.png" class="avatar-option" data-avatar="images/avatar_06.png" />
+                    <img src="images/avatar_07.png" class="avatar-option" data-avatar="images/avatar_07.png" />
+                    <img src="images/avatar_08.png" class="avatar-option" data-avatar="images/avatar_08.png" />
+                    <img src="images/avatar_09.png" class="avatar-option" data-avatar="images/avatar_09.png" />
+                    <img src="images/avatar_10.png" class="avatar-option" data-avatar="images/avatar_10.png" />
+                    <img src="images/avatar_11.png" class="avatar-option" data-avatar="images/avatar_11.png" />
+                    <img src="images/avatar_12.png" class="avatar-option" data-avatar="images/avatar_12.png" />
+                    <img src="images/avatar_13.png" class="avatar-option" data-avatar="images/avatar_13.png" />
+                    <img src="images/avatar_14.png" class="avatar-option" data-avatar="images/avatar_14.png" />
+
                 </div>
             </div>
         </div>
@@ -41,7 +54,7 @@
             <h2>🎮 Lobi Ayarları</h2>
             <div class="lobby-code">Lobi Kodu: <span id="lobby-code-display"></span></div>
         </div>
-        
+
         <div class="lobby-container">
             <div class="settings-panel">
                 <div class="setting-item">
@@ -52,7 +65,7 @@
                         <button class="btn-control" data-action="increase">+</button>
                     </div>
                 </div>
-                
+
                 <div class="setting-item">
                     <label>El Başı Kart</label>
                     <div class="setting-controls">
@@ -61,7 +74,7 @@
                         <button class="btn-control" data-action="increase">+</button>
                     </div>
                 </div>
-                
+
                 <div class="setting-item">
                     <label>Tur Sayısı</label>
                     <div class="setting-controls">
@@ -84,4 +97,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
