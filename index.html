@@ -36,9 +36,52 @@
         </div>
     </div>
     <div id="game-board" style="display:none;"></div>
+    <div id="lobby-settings" class="lobby-settings" style="display:none;">
+        <div class="lobby-header">
+            <h2>🎮 Lobi Ayarları</h2>
+            <div class="lobby-code">Lobi Kodu: <span id="lobby-code-display"></span></div>
+        </div>
+        
+        <div class="lobby-container">
+            <div class="settings-panel">
+                <div class="setting-item">
+                    <label>Süre (dk)</label>
+                    <div class="setting-controls">
+                        <button class="btn-control" data-action="decrease">-</button>
+                        <span id="duration-display">10</span>
+                        <button class="btn-control" data-action="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <label>El Başı Kart</label>
+                    <div class="setting-controls">
+                        <button class="btn-control" data-action="decrease">-</button>
+                        <span id="cards-display">2</span>
+                        <button class="btn-control" data-action="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <label>Tur Sayısı</label>
+                    <div class="setting-controls">
+                        <button class="btn-control" data-action="decrease">-</button>
+                        <span id="rounds-display">5</span>
+                        <button class="btn-control" data-action="increase">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="players-panel">
+                <h3>👥 Oyuncular</h3>
+                <div id="lobby-players" class="players-grid"></div>
+            </div>
+        </div>
+
+        <button id="start-game" class="btn-orange">Oyunu Başlat</button>
+    </div>
     <button id="start-btn" style="display:none;">Oyunu Başlat</button>
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
 </html>

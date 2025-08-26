@@ -1,8 +1,13 @@
+const socket = io();
+
+// Temel değişkenler (bir kere tanımla)
 const avatarPreview = document.getElementById('avatar-preview');
 const avatarPanel = document.getElementById('avatar-panel');
+const avatarOptions = document.querySelectorAll('.avatar-option');
 const gameBoard = document.getElementById('game-board');
 const startBtn = document.getElementById('start-btn');
-const socket = io();
+const mainMenu = document.getElementById('main-menu');
+let selectedAvatar = null;
 
 function createCards() {
     gameBoard.innerHTML = '';
@@ -29,12 +34,6 @@ nicknameInput.addEventListener('blur', () => {
     }
 });
 
-// Değişken tanımları
-const avatarPreview = document.getElementById('avatar-preview');
-const avatarPanel = document.getElementById('avatar-panel');
-const avatarOptions = document.querySelectorAll('.avatar-option');
-let selectedAvatar = null;
-
 // Sayfa yüklendiğinde rastgele avatar seç
 window.addEventListener('load', () => {
     const randomIndex = Math.floor(Math.random() * avatarOptions.length);
@@ -43,21 +42,30 @@ window.addEventListener('load', () => {
     avatarOptions[randomIndex].classList.add('selected');
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Avatar Preview:', avatarPreview);
-    console.log('Avatar Panel:', avatarPanel);
+// Avatar tıklama olayını güncelle
+avatarPreview.addEventListener('click', function(e) {
+    console.log('Avatar tıklandı!');
+    
+    // Popup göster
+    const popup = document.createElement('div');
+    popup.className = 'avatar-popup';
+    popup.textContent = 'Avatar Seçim Menüsü';
+    document.body.appendChild(popup);
+    
+    // Panel görünürlüğünü değiştir
+    if (avatarPanel.style.display === 'none' || avatarPanel.style.display === '') {
+        avatarPanel.style.display = 'block';
+    } else {
+        avatarPanel.style.display = 'none';
+    }
 
-    avatarPreview.onclick = function (e) {
-        console.log('Avatar tıklandı!');
-        if (avatarPanel.style.display === 'none' || avatarPanel.style.display === '') {
-            avatarPanel.style.display = 'flex';
-        } else {
-            avatarPanel.style.display = 'none';
-        }
-        e.stopPropagation();
-    };
+    // 1 saniye sonra popup'ı kaldır
+    setTimeout(() => {
+        popup.remove();
+    }, 1000);
+
+    e.stopPropagation();
 });
-
 
 // Avatar seçim olayı
 avatarOptions.forEach(avatar => {
@@ -81,9 +89,14 @@ document.addEventListener('click', (e) => {
 // Lobi butonları
 const createLobbyBtn = document.getElementById('create-lobby');
 const joinLobbyBtn = document.getElementById('join-lobby');
-const mainMenu = document.getElementById('main-menu');
-const gameBoard = document.getElementById('game-board');
-const startBtn = document.getElementById('start-btn');
+
+// Lobi ayarları için değişkenler
+const lobbySettings = document.getElementById('lobby-settings');
+const lobbyPlayers = document.getElementById('lobby-players');
+const gameDuration = document.getElementById('game-duration');
+const cardsPerHand = document.getElementById('cards-per-hand');
+const rounds = document.getElementById('rounds');
+let isHost = false;
 
 function showGameBoard() {
     mainMenu.style.display = 'none';
@@ -97,7 +110,16 @@ createLobbyBtn.addEventListener('click', () => {
     setTimeout(() => createLobbyBtn.classList.remove('btn-animate'), 200);
     const nickname = nicknameInput.value.trim() || randomNick();
     const avatar = selectedAvatar || '';
-    socket.emit('createLobby', { nickname, avatar });
+    isHost = true;
+    socket.emit('createLobby', { 
+        nickname, 
+        avatar,
+        settings: {
+            duration: gameDuration.value,
+            cardsPerHand: cardsPerHand.value,
+            rounds: rounds.value
+        }
+    });
 });
 
 joinLobbyBtn.addEventListener('click', () => {
@@ -114,9 +136,10 @@ let currentLobbyId = null;
 socket.on('lobbyCreated', ({ lobbyId }) => {
     alert(`Lobi oluşturuldu! Kod: ${lobbyId}`);
     currentLobbyId = lobbyId;
-    showGameBoard();
+    showLobbySettings(true);
 });
 socket.on('playerJoined', ({ players }) => {
+    updatePlayersList(players);
     // Oyuncu listesi güncellenebilir
     console.log('Lobi oyuncuları:', players);
 });
@@ -172,3 +195,70 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Lobi görüntüleme
+function showLobbySettings(isHost) {
+    mainMenu.style.display = 'none';
+    lobbySettings.style.display = 'block';
+    
+    // Sadece host ayarları değiştirebilir
+    gameDuration.disabled = !isHost;
+    cardsPerHand.disabled = !isHost;
+    rounds.disabled = !isHost;
+}
+
+// Ayar değerleri ve limitleri
+const settings = {
+    duration: { value: 10, min: 5, max: 30, step: 5 },
+    cards: { value: 2, min: 2, max: 6, step: 1 },
+    rounds: { value: 5, min: 3, max: 15, step: 2 }
+};
+
+// Ayar kontrollerini yönet
+document.querySelectorAll('.btn-control').forEach(btn => {
+    btn.addEventListener('click', function() {
+        if (!isHost) return; // Sadece host değiştirebilir
+        
+        const action = this.dataset.action;
+        const setting = this.closest('.setting-item').querySelector('span').id.split('-')[0];
+        const currentSetting = settings[setting];
+        
+        if (action === 'increase' && currentSetting.value < currentSetting.max) {
+            currentSetting.value += currentSetting.step;
+        } else if (action === 'decrease' && currentSetting.value > currentSetting.min) {
+            currentSetting.value -= currentSetting.step;
+        }
+        
+        // Görüntüyü güncelle
+        document.getElementById(`${setting}-display`).textContent = currentSetting.value;
+        
+        // Sunucuya bildir
+        socket.emit('updateSettings', { 
+            lobbyId: currentLobbyId, 
+            settings: {
+                duration: settings.duration.value,
+                cards: settings.cards.value,
+                rounds: settings.rounds.value
+            }
+        });
+    });
+});
+
+// Oyuncu listesini güncelle
+function updatePlayersList(players) {
+    const playersList = document.getElementById('lobby-players');
+    playersList.innerHTML = '';
+    
+    players.forEach((player, index) => {
+        const playerCard = document.createElement('div');
+        playerCard.className = `player-card ${index === 0 ? 'host' : ''}`;
+        playerCard.innerHTML = `
+            <img src="${player.avatar}" alt="${player.nickname}">
+            <div class="player-info">
+                <div class="player-name">${player.nickname}</div>
+                ${index === 0 ? '<div class="player-status">Lobi Sahibi</div>' : ''}
+            </div>
+        `;
+        playersList.appendChild(playerCard);
+    });
+}
