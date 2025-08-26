@@ -58,40 +58,35 @@
         <div class="lobby-container">
             <div class="settings-panel">
                 <div class="setting-item">
-                    <label>Süre (dk)</label>
-                    <div class="setting-controls">
-                        <button class="btn-control" data-action="decrease">-</button>
-                        <span id="duration-display">10</span>
-                        <button class="btn-control" data-action="increase">+</button>
-                    </div>
+                    <label>Süre:</label>
+                    <button class="btn-control" data-action="decrease">-</button>
+                    <span id="duration-display">10</span>
+                    <button class="btn-control" data-action="increase">+</button>
                 </div>
 
                 <div class="setting-item">
-                    <label>El Başı Kart</label>
-                    <div class="setting-controls">
-                        <button class="btn-control" data-action="decrease">-</button>
-                        <span id="cards-display">2</span>
-                        <button class="btn-control" data-action="increase">+</button>
-                    </div>
+                    <label>Kart Sayısı:</label>
+                    <button class="btn-control" data-action="decrease">-</button>
+                    <span id="cards-display">2</span>
+                    <button class="btn-control" data-action="increase">+</button>
                 </div>
 
                 <div class="setting-item">
-                    <label>Tur Sayısı</label>
-                    <div class="setting-controls">
-                        <button class="btn-control" data-action="decrease">-</button>
-                        <span id="rounds-display">5</span>
-                        <button class="btn-control" data-action="increase">+</button>
-                    </div>
+                    <label>Tur Sayısı:</label>
+                    <button class="btn-control" data-action="decrease">-</button>
+                    <span id="rounds-display">5</span>
+                    <button class="btn-control" data-action="increase">+</button>
                 </div>
-            </div>
-
-            <div class="players-panel">
-                <h3>👥 Oyuncular</h3>
-                <div id="lobby-players" class="players-grid"></div>
             </div>
         </div>
 
-        <button id="start-game" class="btn-orange">Oyunu Başlat</button>
+        <div class="players-panel">
+            <h3>👥 Oyuncular</h3>
+            <div id="lobby-players" class="players-grid"></div>
+        </div>
+    </div>
+
+    <button id="start-game" class="btn-orange">Oyunu Başlat</button>
     </div>
     <button id="start-btn" style="display:none;">Oyunu Başlat</button>
     <script src="/socket.io/socket.io.js"></script>

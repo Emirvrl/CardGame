@@ -18,25 +18,43 @@ const CARD_IMAGES = [
 ];
 
 io.on('connection', (socket) => {
-    socket.on('createLobby', ({ nickname, avatar }) => {
+
+    socket.on('createLobby', ({ nickname, avatar, settings }) => {
         const lobbyId = Math.random().toString(36).substr(2, 6);
-        lobbies[lobbyId] = { players: [{ id: socket.id, nickname, avatar }] };
+        lobbies[lobbyId] = {
+            players: [{ id: socket.id, nickname, avatar }],
+            settings: settings || { duration: 10, cards: 2, rounds: 5 }
+        };
         socket.join(lobbyId);
-        socket.emit('lobbyCreated', { lobbyId });
+        socket.emit('lobbyCreated', { lobbyId, settings: lobbies[lobbyId].settings });
+        io.to(lobbyId).emit('playerJoined', { players: lobbies[lobbyId].players, settings: lobbies[lobbyId].settings });
     });
 
+    // joinLobby: katilan oyuncuya da mevcut ayarlari ver
     socket.on('joinLobby', ({ lobbyId, nickname, avatar }) => {
-        if (lobbies[lobbyId]) {
-            if (lobbies[lobbyId].players.length >= 4) {
-                socket.emit('lobbyError', { message: 'Lobi dolu (max 4 oyuncu).' });
-                return;
-            }
-            lobbies[lobbyId].players.push({ id: socket.id, nickname, avatar });
-            socket.join(lobbyId);
-            io.to(lobbyId).emit('playerJoined', { players: lobbies[lobbyId].players });
-        } else {
-            socket.emit('lobbyError', { message: 'Lobi bulunamadı.' });
+        const lobby = lobbies[lobbyId];
+        if (!lobby) return socket.emit('lobbyError', { message: 'Lobi bulunamadi.' });
+
+        if (lobby.players.length >= 4) {
+            return socket.emit('lobbyError', { message: 'Lobi dolu (max 4 oyuncu).' });
         }
+
+        lobby.players.push({ id: socket.id, nickname, avatar });
+        socket.join(lobbyId);
+
+        // tum odaya oyuncu listesi ve ayarlar
+        io.to(lobbyId).emit('playerJoined', { players: lobby.players, settings: lobby.settings });
+
+        // yeni katilana lobi kodunu ayrica bildir (istenirse)
+        socket.emit('lobbyInfo', { lobbyId, settings: lobby.settings });
+    });
+
+    // host ayarlari degistirdiginde lobby'ye yayinla
+    socket.on('updateSettings', ({ lobbyId, settings }) => {
+        const lobby = lobbies[lobbyId];
+        if (!lobby) return;
+        lobby.settings = { ...lobby.settings, ...settings };
+        io.to(lobbyId).emit('settingsUpdated', lobby.settings);
     });
 
     socket.on('startGame', ({ lobbyId }) => {
