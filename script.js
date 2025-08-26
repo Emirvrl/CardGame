@@ -1,5 +1,6 @@
 const gameBoard = document.getElementById('game-board');
 const startBtn = document.getElementById('start-btn');
+const socket = io();
 
 function createCards() {
     gameBoard.innerHTML = '';
@@ -59,12 +60,61 @@ function showGameBoard() {
 createLobbyBtn.addEventListener('click', () => {
     createLobbyBtn.classList.add('btn-animate');
     setTimeout(() => createLobbyBtn.classList.remove('btn-animate'), 200);
-    showGameBoard();
+    const nickname = nicknameInput.value.trim() || randomNick();
+    const avatar = avatarPreview.style.backgroundImage || '';
+    socket.emit('createLobby', { nickname, avatar });
 });
+
 joinLobbyBtn.addEventListener('click', () => {
     joinLobbyBtn.classList.add('btn-animate');
     setTimeout(() => joinLobbyBtn.classList.remove('btn-animate'), 200);
+    const lobbyId = prompt("Lobi kodunu girin:");
+    const nickname = nicknameInput.value.trim() || randomNick();
+    const avatar = avatarPreview.style.backgroundImage || '';
+    socket.emit('joinLobby', { lobbyId, nickname, avatar });
+});
+
+let currentLobbyId = null;
+
+socket.on('lobbyCreated', ({ lobbyId }) => {
+    alert(`Lobi oluşturuldu! Kod: ${lobbyId}`);
+    currentLobbyId = lobbyId;
     showGameBoard();
+});
+socket.on('playerJoined', ({ players }) => {
+    // Oyuncu listesi güncellenebilir
+    console.log('Lobi oyuncuları:', players);
+});
+socket.on('lobbyError', ({ message }) => {
+    alert(message);
+});
+
+// Oyunu başlat
+startBtn.addEventListener('click', () => {
+    if (!currentLobbyId) {
+        alert('Lobiye katılmadan oyun başlatılamaz!');
+        return;
+    }
+    socket.emit('startGame', { lobbyId: currentLobbyId });
+});
+
+// Kartları göster
+socket.on('yourCards', ({ cards }) => {
+    gameBoard.innerHTML = '';
+    cards.forEach(cardImg => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
+        const img = document.createElement('img');
+        img.src = cardImg;
+        img.alt = 'Kart';
+        img.className = 'card-img';
+        cardDiv.appendChild(img);
+        gameBoard.appendChild(cardDiv);
+    });
+});
+
+socket.on('gameStarted', () => {
+    alert('Oyun başladı!');
 });
 
 // Buton animasyonu için ek CSS

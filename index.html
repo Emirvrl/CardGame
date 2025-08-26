@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Kart Oyunu</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Kart görselleri için stil -->
+    <style>
+    .card-img {
+        width: 70px;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+    </style>
 </head>
 <body>
     <h1>Kart Oyunu</h1>
@@ -18,6 +27,7 @@
     </div>
     <div id="game-board" style="display:none;"></div>
     <button id="start-btn" style="display:none;">Oyunu Başlat</button>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

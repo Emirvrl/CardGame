@@ -88,3 +88,9 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     border: 2px solid #43ea7c;
 }
+.card-img {
+    width: 70px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 6px;
+}
