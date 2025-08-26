@@ -1,3 +1,5 @@
+const avatarPreview = document.getElementById('avatar-preview');
+const avatarPanel = document.getElementById('avatar-panel');
 const gameBoard = document.getElementById('game-board');
 const startBtn = document.getElementById('start-btn');
 const socket = io();
@@ -31,7 +33,7 @@ nicknameInput.addEventListener('blur', () => {
 const avatarPreview = document.getElementById('avatar-preview');
 const avatarPanel = document.getElementById('avatar-panel');
 const avatarOptions = document.querySelectorAll('.avatar-option');
-let selectedAvatar = null; // Seçili avatar için değişken eklendi
+let selectedAvatar = null;
 
 // Sayfa yüklendiğinde rastgele avatar seç
 window.addEventListener('load', () => {
@@ -41,17 +43,12 @@ window.addEventListener('load', () => {
     avatarOptions[randomIndex].classList.add('selected');
 });
 
-// Avatar tıklama kodunu güncelle
 document.addEventListener('DOMContentLoaded', () => {
-    const avatarPreview = document.getElementById('avatar-preview');
-    const avatarPanel = document.getElementById('avatar-panel');
-    
-    console.log('Avatar Preview:', avatarPreview); // Kontrol için
-    console.log('Avatar Panel:', avatarPanel); // Kontrol için
+    console.log('Avatar Preview:', avatarPreview);
+    console.log('Avatar Panel:', avatarPanel);
 
-    // Tıklama olayını düzelt
-    avatarPreview.onclick = function(e) {
-        console.log('Avatar tıklandı!'); // Kontrol için
+    avatarPreview.onclick = function (e) {
+        console.log('Avatar tıklandı!');
         if (avatarPanel.style.display === 'none' || avatarPanel.style.display === '') {
             avatarPanel.style.display = 'flex';
         } else {
@@ -60,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
     };
 });
+
 
 // Avatar seçim olayı
 avatarOptions.forEach(avatar => {
