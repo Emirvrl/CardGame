@@ -24,6 +24,28 @@ body {
     background: #fff;
     color: #222;
 }
+.avatar-select {
+    margin: 10px 0;
+}
+#avatar-list {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+.avatar-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #43ea7c;
+    cursor: pointer;
+    object-fit: cover;
+    transition: box-shadow 0.2s, border 0.2s;
+}
+.avatar-option.selected {
+    box-shadow: 0 0 8px #ff9800;
+    border: 2px solid #ff9800;
+}
 .avatar-preview {
     width: 80px;
     height: 80px;

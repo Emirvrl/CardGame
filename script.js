@@ -27,20 +27,23 @@ nicknameInput.addEventListener('blur', () => {
     }
 });
 
-// Avatar önizleme
-const avatarInput = document.getElementById('avatar');
+// Avatar seçimi
 const avatarPreview = document.getElementById('avatar-preview');
-avatarInput.addEventListener('change', function() {
-    const file = avatarInput.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            avatarPreview.style.backgroundImage = `url('${e.target.result}')`;
-        };
-        reader.readAsDataURL(file);
-    } else {
-        avatarPreview.style.backgroundImage = '';
-    }
+let selectedAvatar = null;
+const avatarOptions = document.querySelectorAll('.avatar-option');
+
+// Otomatik olarak p1 seçili
+selectedAvatar = 'images/p1.jpg';
+avatarPreview.style.backgroundImage = `url('${selectedAvatar}')`;
+avatarOptions[0].classList.add('selected');
+
+avatarOptions.forEach(img => {
+    img.addEventListener('click', function() {
+        avatarOptions.forEach(i => i.classList.remove('selected'));
+        img.classList.add('selected');
+        selectedAvatar = img.getAttribute('data-avatar');
+        avatarPreview.style.backgroundImage = `url('${selectedAvatar}')`;
+    });
 });
 
 // Lobi butonları
@@ -61,7 +64,7 @@ createLobbyBtn.addEventListener('click', () => {
     createLobbyBtn.classList.add('btn-animate');
     setTimeout(() => createLobbyBtn.classList.remove('btn-animate'), 200);
     const nickname = nicknameInput.value.trim() || randomNick();
-    const avatar = avatarPreview.style.backgroundImage || '';
+    const avatar = selectedAvatar || '';
     socket.emit('createLobby', { nickname, avatar });
 });
 
@@ -70,7 +73,7 @@ joinLobbyBtn.addEventListener('click', () => {
     setTimeout(() => joinLobbyBtn.classList.remove('btn-animate'), 200);
     const lobbyId = prompt("Lobi kodunu girin:");
     const nickname = nicknameInput.value.trim() || randomNick();
-    const avatar = avatarPreview.style.backgroundImage || '';
+    const avatar = selectedAvatar || '';
     socket.emit('joinLobby', { lobbyId, nickname, avatar });
 });
 

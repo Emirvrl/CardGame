@@ -18,7 +18,15 @@
     <h1>Kart Oyunu</h1>
     <div id="main-menu" class="menu-box">
         <input type="text" id="nickname" placeholder="Kullanıcı Adı" class="input-green"/>
-        <input type="file" id="avatar" accept="image/*" class="input-green"/>
+        <div id="avatar-select" class="avatar-select">
+            <span>Avatar Seç:</span>
+            <div id="avatar-list">
+                <img src="images/p1.jpg" class="avatar-option" data-avatar="images/p1.jpg" />
+                <img src="images/p2.jpg" class="avatar-option" data-avatar="images/p2.jpg" />
+                <img src="images/p3.jpg" class="avatar-option" data-avatar="images/p3.jpg" />
+                <img src="images/p4.jpg" class="avatar-option" data-avatar="images/p4.jpg" />
+            </div>
+        </div>
         <div id="avatar-preview" class="avatar-preview"></div>
         <div class="lobby-buttons">
             <button id="create-lobby" class="btn-orange">Lobi Oluştur</button>
@@ -30,4 +38,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
+</html>
 </html>
