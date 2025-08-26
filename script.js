@@ -27,52 +27,54 @@ nicknameInput.addEventListener('blur', () => {
     }
 });
 
-// Avatar seçimi
+// Değişken tanımları
 const avatarPreview = document.getElementById('avatar-preview');
 const avatarPanel = document.getElementById('avatar-panel');
 const avatarOptions = document.querySelectorAll('.avatar-option');
-const avatarList = [
-    'images/p1.jpg',
-    'images/p2.jpg',
-    'images/p3.jpg',
-    'images/p4.jpg'
-];
+let selectedAvatar = null; // Seçili avatar için değişken eklendi
 
-// Rastgele avatar seçimi
-function getRandomAvatar() {
-    return avatarList[Math.floor(Math.random() * avatarList.length)];
-}
-let selectedAvatar = getRandomAvatar();
-avatarPreview.style.backgroundImage = `url('${selectedAvatar}')`;
-
-// Paneldeki avatarları işaretle
-avatarOptions.forEach(img => {
-    img.classList.remove('selected');
-    if (img.getAttribute('data-avatar') === selectedAvatar) {
-        img.classList.add('selected');
-    }
+// Sayfa yüklendiğinde rastgele avatar seç
+window.addEventListener('load', () => {
+    const randomIndex = Math.floor(Math.random() * avatarOptions.length);
+    const randomAvatar = avatarOptions[randomIndex].getAttribute('data-avatar');
+    avatarPreview.style.backgroundImage = `url('${randomAvatar}')`;
+    avatarOptions[randomIndex].classList.add('selected');
 });
 
-// Avatar önizlemesine tıklayınca panel aç/kapat
-avatarPreview.addEventListener('mousedown', function(e) {
-    avatarPanel.style.display = avatarPanel.style.display === 'none' || avatarPanel.style.display === '' ? 'flex' : 'none';
-    e.stopPropagation();
+// Avatar tıklama kodunu güncelle
+document.addEventListener('DOMContentLoaded', () => {
+    const avatarPreview = document.getElementById('avatar-preview');
+    const avatarPanel = document.getElementById('avatar-panel');
+    
+    console.log('Avatar Preview:', avatarPreview); // Kontrol için
+    console.log('Avatar Panel:', avatarPanel); // Kontrol için
+
+    // Tıklama olayını düzelt
+    avatarPreview.onclick = function(e) {
+        console.log('Avatar tıklandı!'); // Kontrol için
+        if (avatarPanel.style.display === 'none' || avatarPanel.style.display === '') {
+            avatarPanel.style.display = 'flex';
+        } else {
+            avatarPanel.style.display = 'none';
+        }
+        e.stopPropagation();
+    };
 });
 
-// Panelde avatar seçimi
-avatarOptions.forEach(img => {
-    img.addEventListener('mousedown', function(e) {
-        avatarOptions.forEach(i => i.classList.remove('selected'));
-        img.classList.add('selected');
-        selectedAvatar = img.getAttribute('data-avatar');
+// Avatar seçim olayı
+avatarOptions.forEach(avatar => {
+    avatar.addEventListener('click', (e) => {
+        selectedAvatar = avatar.getAttribute('data-avatar');
         avatarPreview.style.backgroundImage = `url('${selectedAvatar}')`;
+        avatarOptions.forEach(a => a.classList.remove('selected'));
+        avatar.classList.add('selected');
         avatarPanel.style.display = 'none';
         e.stopPropagation();
     });
 });
 
-// Panel dışında bir yere tıklanınca paneli kapat
-document.addEventListener('mousedown', function(e) {
+// Dışarı tıklandığında paneli kapat
+document.addEventListener('click', (e) => {
     if (!avatarPreview.contains(e.target) && !avatarPanel.contains(e.target)) {
         avatarPanel.style.display = 'none';
     }
@@ -167,11 +169,6 @@ style.textContent = `
             transform: scale(1.1);
         }
         100% {
-            transform: scale(1);
-        }
-    }
-`;
-document.head.appendChild(style);
             transform: scale(1);
         }
     }

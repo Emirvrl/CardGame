@@ -69,8 +69,39 @@ io.on('connection', (socket) => {
     });
 });
 
+// Hata yakalama
+io.on('connect_error', (error) => {
+    console.error('Socket.IO bağlantı hatası:', error);
+});
+
+// Express hata yakalama
+app.use((err, req, res, next) => {
+    console.error('Express hatası:', err);
+    res.status(500).send('Sunucu hatası');
+});
+
+// Express static middleware'i başa alındı
 app.use(express.static(__dirname));
 
-server.listen(3000, () => {
-    console.log('Sunucu çalışıyor: http://localhost:3000');
+const PORT = 3001;
+
+// Sunucuyu başlat
+try {
+    server.listen(PORT, '0.0.0.0', () => {
+        console.log('✅ Sunucu başlatıldı');
+        console.log(`📡 http://localhost:${PORT} adresinde çalışıyor`);
+        console.log('⌛ Bağlantılar bekleniyor...');
+    });
+} catch (error) {
+    console.error('❌ Sunucu başlatma hatası:', error);
+    process.exit(1);
+}
+
+// Ctrl+C ile güvenli kapatma
+process.on('SIGINT', () => {
+    console.log('\n🛑 Sunucu kapatılıyor...');
+    server.close(() => {
+        console.log('👋 Sunucu güvenli bir şekilde kapatıldı');
+        process.exit(0);
+    });
 });

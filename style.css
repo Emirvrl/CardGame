@@ -29,13 +29,15 @@ body {
 }
 #avatar-list {
     display: flex;
-    justify-content: center;
     gap: 10px;
-    margin-top: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    width: 100%;
 }
 .avatar-option {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     border: 2px solid #43ea7c;
     cursor: pointer;
@@ -66,17 +68,14 @@ body {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 70px;
-    background: linear-gradient(135deg, #ff9800 60%, #43ea7c 100%);
+    top: 80px; /* Biraz daha aşağıda görünsün */
+    background: rgba(255, 255, 255, 0.95);
     border: 3px solid #43ea7c;
     border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(255,152,0,0.2);
-    padding: 16px 18px 12px 18px;
-    z-index: 10;
-    display: none; /* panel varsayılan olarak kapalı */
-    flex-direction: column;
-    align-items: center;
-    min-width: 220px;
+    padding: 15px;
+    z-index: 1000; /* En üstte görünsün */
+    width: 250px;
+    display: none;
 }
 .avatar-panel-header {
     color: #fff;
@@ -143,6 +142,9 @@ body {
 .card-img {
     width: 70px;
     height: 100px;
+    object-fit: contain;
+    border-radius: 6px;
+}
     object-fit: contain;
     border-radius: 6px;
 }
